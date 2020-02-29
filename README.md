@@ -12,7 +12,7 @@ python-docx
 ```
 
 ## Execution
-* Run either [run.bat]('./coding/run.bat') [for Windows] OR [run.sh]('./coding/run.sh') [for any OS] file
+* Run either [run.bat](./coding/run.bat) [for Windows] OR [run.sh](./coding/run.sh) [for any OS] file
 
 <div style="page-break-after: always;"></div>
 
