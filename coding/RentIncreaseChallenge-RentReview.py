@@ -1,21 +1,20 @@
 import xlwings as xw
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-# from input import *
 
 # =================================================
-doc_filename = 'DepositDeduction-Challenge.docx'
+doc_filename = 'RentIncreaseChallenge-RentReview.docx'
 para1_body = '{Date}\n{Taddress}\n{TPostcode}'
-para2_body = 'Dear {LLname},\n\nRE: Deposit Deduction at {Taddress}\n\nI am the tenant at the above address and I am writing to inform you that the reason you are deducting my deposit is invalid for the following reason(s):\n\n'
-# todo - Q2 or Q2.5         Apply logic based on Yes/No
-b1_body = '{Q2} Landlords must protect tenancy deposits within 30 days of receiving them. If a landlord fails to protect the deposit, the tenant can be eligible for compensation 1-3 times the original deposit.'
-b2_body = '{Q6} The property was left in a clean manner, that was similar to, or in better condition than when I moved in.'
-b3_body = '{Q7} Landlords cannot deduct from a tenants deposit due to general wear and tear. I have considered the following factors:\n\n\t\t- The type of damages and the items material\n\t\t- What the item is and how long it is supposed to last\n\t\t- How old the item is and the length of your tenancy\n\t\t- Specifications of the item\n\t\t- What shape the item was in upon moving in\n\n'
-para3_body = 'Please contact me as soon as possible to further discuss the matter.\n\nBest regards,\n\n\n{Name}'
+para2_body = 'Dear {LLname},\n\nRE: Rent Increase at {Taddress}\n\nI am the tenant at the above address and I am writing to inform you that the recent/proposed rent increase is invalid for the following reason(s):'
+b1_body = '{Q1} If a landlord cities a rent review clause for a newly proposed rental price and it is not explicitly stated in the agreement, the rent increase is invalid.'
+b2_body = '{Q2} Because I have a statutory periodic tenancy, the rent review clause in the tenancy agreement does not apply.'
+b3_body = '{Q3} After conducting market research, I\'ve come to the conclusion that the rent increase is unreasonable as it is much higher than similar properties in the neighbourhood. The Unfair Terms in the Consumer Contracts Regulations 1999 protects consumers against unfair standard terms in standard term contracts.'
+b4_body = '{Q4} Because you have attempted to increase the rent at a different time than what is stated on the agreement, this rent increase is invalid.'
+para3_body = '\n\nPlease contact me as soon as possible to further discuss the matter.\n\nBest regards,\n\n\n{Name}'
 
 # ================================================
 wb = xw.Book('../data/Tenantchat.xlsx')
-sht = wb.sheets['Deposit Deduction']
+sht = wb.sheets['RentIncrease-RentReview']
 
 # -----------------------------------------------
 # Define variables 
@@ -24,9 +23,10 @@ taddress = sht.range('F2').value
 tpostcode = sht.range('G2').value
 llname = sht.range('E2').value
 name = sht.range('B2').value
+q1 = sht.range('H2').value
 q2 = sht.range('I2').value
-q6 = sht.range('N2').value
-q7 = sht.range('O2').value
+q3 = sht.range('K2').value
+q4 = sht.range('L2').value
 
 # =================================================
 # Create document from here
@@ -46,26 +46,37 @@ para2 = d.add_paragraph(para2_body.format(
 
 para2.alignment = WD_ALIGN_PARAGRAPH.LEFT
 # -------------------------------------------------
+if q1 == 'Yes':
+    # b1 = d.add_paragraph('')    # empty with 3 lines as per the preview img
+    pass
+elif q1 == 'No':
+    b1 = d.add_paragraph(b1_body.format(Q1= ''), style= 'List Bullet')
+else:
+    b1 = d.add_paragraph(b1_body.format(Q1= q1), style= 'List Bullet')
+# -------------------------------------------------
 if q2 == 'Yes':
-    b1 = d.add_paragraph('\n\n\n')    # empty with 3 lines as per the preview img
+    b2 = d.add_paragraph(b2_body.format(Q2= ''), style= 'List Bullet')
 elif q2 == 'No':
-    b1 = d.add_paragraph(b1_body.format(Q2= ''), style= 'List Bullet')
+    # b2 = d.add_paragraph('')    # empty with 2 lines as per the preview img
+    pass
 else:
-    b1 = d.add_paragraph(b1_body.format(Q2= q2), style= 'List Bullet')
+    b2 = d.add_paragraph(b2_body.format(Q2= q2), style= 'List Bullet')
 # -------------------------------------------------
-if q6 == 'Yes':
-    b2 = d.add_paragraph('\n\n')    # empty with 2 lines as per the preview img
-elif q6 == 'No':
-    b2 = d.add_paragraph(b2_body.format(Q6= ''), style= 'List Bullet')
+if q3 == 'Yes':
+    b3 = d.add_paragraph(b3_body.format(Q3= ''), style= 'List Bullet')
+elif q3 == 'No':
+    # b3 = d.add_paragraph('')    # empty with 5 lines as per the preview img
+    pass
 else:
-    b2 = d.add_paragraph(b2_body.format(Q6= q6), style= 'List Bullet')
+    b3 = d.add_paragraph(b3_body.format(Q3= q3), style= 'List Bullet')
 # -------------------------------------------------
-if q7 == 'Yes':
-    b3 = d.add_paragraph('\n\n\n\n\n\n\n\n\n')    # empty with 9 lines as per the preview img
-elif q7 == 'No':
-    b3 = d.add_paragraph(b3_body.format(Q7= ''), style= 'List Bullet')
+if q4 == 'Yes':
+    b4 = d.add_paragraph(b4_body.format(Q4= ''), style= 'List Bullet')
+elif q4 == 'No':
+    # b4 = d.add_paragraph('\n\n')    # empty with 5 lines as per the preview img
+    pass
 else:
-    b3 = d.add_paragraph(b3_body.format(Q7= q7), style= 'List Bullet')
+    b4 = d.add_paragraph(b4_body.format(Q4= q4), style= 'List Bullet')
 # -------------------------------------------------
 para3 = d.add_paragraph(para3_body.format(Name= name))
 
