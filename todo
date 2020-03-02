@@ -1,0 +1,3 @@
+- Currently, configured for a single row, but now for multiple customers.
+  By giving name, one should be able to create rent agreement in tenant's name.
+- Automatically, send the agreement to the tenant's email address.
